@@ -26,12 +26,14 @@
       community.general.pacman:
         name: "{{ item }}"
         state: present
+        extra_args: --overwrite "*"
       loop: "{{ lookup('file', 'ref/pkglist.txt').splitlines()}}"
 
 
     - name: Check if yay executable is already in path.
       shell: "which yay"
       register: yay_bool
+      ignore_errors: true
 
     - name: Install yay.
       when: yay_bool.rc != 0
@@ -60,7 +62,7 @@
           state: absent
 
     - name: Install packages
-      shell: yay -S --noconfirm --needed {{ item }}
+      shell: yay -S --noconfirm --needed --overwrite "*" {{ item }}
       loop: "{{ lookup('file', 'ref/pkglistaur.txt').splitlines()}}"
 
 
