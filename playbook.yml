@@ -21,12 +21,12 @@
       loop: "{{lookup('fileglob', 'ref/*.txt', wantlist=True)}}"
 
 
-    #- name: Install packages with pacman.
-      #become: yes
-      #community.general.pacman:
-        #name: "{{ item }}"
-        #state: present
-      #loop: "{{ lookup('file', 'ref/pkglist.txt').splitlines()}}"
+    - name: Install packages with pacman.
+      become: yes
+      community.general.pacman:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ lookup('file', 'ref/pkglist.txt').splitlines()}}"
 
 
     - name: Check if yay executable is already in path.
