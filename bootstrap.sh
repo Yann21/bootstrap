@@ -9,6 +9,7 @@ export ANSIBLE_NOCOWS=1
 
 # Install pacman plugin for Ansible
 ansible-galaxy collection install community.general
+ansible-galaxy install kewlfft.aur
 
 # Run playbook
 ansible-playbook playbook.yml -i hosts --ask-become-pass

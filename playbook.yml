@@ -1,68 +1,32 @@
 ---
 - name: Provision production machine
   hosts: localhost
+  roles:
+  - kewlfft.aur
 
   tasks:
-    - name: Run the equivalent of pacman -Syu
+
+    - name: Create user
       become: yes
-      community.general.pacman:
-        update_cache: yes
-        upgrade: yes
-    
+      user:
+        name: aur_builder
+        group: wheel
 
-    - name: Install / synchronize reference files.
-      tags: ho
+    - name: Change sudoers.
       become: yes
-      file:
-        src: "{{ item }}"
-        dest: "/etc/{{ item | basename }}"
-        state: hard
-        force: yes
-      loop: "{{lookup('fileglob', 'ref/*.txt', wantlist=True)}}"
-
-
-    - name: Install packages with pacman.
-      become: yes
-      community.general.pacman:
-        name: "{{ item }}"
-        state: present
-        extra_args: --overwrite "*"
-      loop: "{{ lookup('file', 'ref/pkglist.txt').splitlines()}}"
-
-
-    - name: Check if yay executable is already in path.
-      shell: "which yay"
-      register: yay_bool
-      ignore_errors: true
-
-    - name: Install yay.
-      when: yay_bool.rc != 0
-      block:
-      - name: Create build directory.
-        become: yes
-        file:
-          path: /tmp/yay-build
-          state: directory
-          owner: "{{ lookup('env', 'USER') }}"
-          group: "{{ lookup('env', 'USER') }}"
-
-      - name: Clone yay source repo.
-        git:
-          repo: https://aur.archlinux.org/yay-git.git
-          dest: /tmp/yay-build
-
-      - name: Make and install yay.
-        shell: makepkg -si --noconfirm
-        args:
-          chdir: /tmp/yay-build
-
-      - name: Remove build directory
-        file:
-          path: /tmp/yay-build
-          state: absent
+      lineinfile:
+        path: /etc/sudoers.d/11-install-aur_builder
+        line: "aur_builder ALL=(ALL) NOPASSWD: /usr/bin/pacman"
+        create: yes
+        validate: "visudo -cf %s"
 
     - name: Install packages
-      shell: yay -S --noconfirm --needed --overwrite "*" {{ item }}
+      become: yes
+      become_user: aur_builder
+      aur:
+        name: "{{ item }}"
+        use: yay
+        extra_args: --overwrite "*"
       loop: "{{ lookup('file', 'ref/pkglistaur.txt').splitlines()}}"
 
 
