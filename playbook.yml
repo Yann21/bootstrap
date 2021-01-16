@@ -21,27 +21,36 @@
       loop: "{{lookup('fileglob', 'ref/*.txt', wantlist=True)}}"
 
 
-    - name: Install packages with pacman.
-      community.general.pacman:
-        name: "{{ item }}"
-        state: present
-      loop: "{{ lookup('file', 'ref/pkglist.txt').splitlines()}}"
+    #- name: Install packages with pacman.
+      #become: yes
+      #community.general.pacman:
+        #name: "{{ item }}"
+        #state: present
+      #loop: "{{ lookup('file', 'ref/pkglist.txt').splitlines()}}"
 
 
-    - name: Install yay and AUR packages.
+    - name: Check if yay executable is already in path.
+      shell: "which yay"
+      register: yay_bool
+
+    - name: Install yay.
+      when: yay_bool.rc != 0
       block:
+      - name: Create build directory.
+        become: yes
+        file:
+          path: /tmp/yay-build
+          state: directory
+          owner: "{{ lookup('env', 'USER') }}"
+          group: "{{ lookup('env', 'USER') }}"
+
       - name: Clone yay source repo.
         git:
           repo: https://aur.archlinux.org/yay-git.git
           dest: /tmp/yay-build
 
-      - name: Add permissions.
-        file:
-          path: /tmp/yay-build
-          owner: "{{ lookup('env', 'USER') }}"
-
-      - name: Make and install yay
-        shell: makepkg -si
+      - name: Make and install yay.
+        shell: makepkg -si --noconfirm
         args:
           chdir: /tmp/yay-build
 
@@ -50,16 +59,24 @@
           path: /tmp/yay-build
           state: absent
 
-      - name: Install packages
-        shell: yay -S --noconfirm --needed {{ item }}
-        loop: "{{ lookup('file', 'ref/pkglistaur.txt').splitlines()}}"
+    - name: Install packages
+      shell: yay -S --noconfirm --needed {{ item }}
+      loop: "{{ lookup('file', 'ref/pkglistaur.txt').splitlines()}}"
 
 
     - name: Turn on systemd services.
       systemd:
-        state: started
         name: "{{ item }}"
+        state: started
+        scope: system # Default
       loop: "{{ lookup('file', 'ref/systemdlist.txt').splitlines()}}"
+
+    - name: Turn on systemd user services.
+      systemd:
+        name: "{{ item }}"
+        state: started
+        scope: user
+      loop: "{{ lookup('file', 'ref/systemduserlist.txt').splitlines()}}"
 
 
 
