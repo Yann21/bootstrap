@@ -3,7 +3,6 @@ aic94xx-firmware
 alt
 anaconda
 ancient-packages
-armitage
 assh
 autokey-common
 autokey-gtk
@@ -22,7 +21,6 @@ github-cli-git
 gitlab-cli
 glow
 google-calendar-nativefier
-gputest
 grafterm
 hash-identifier
 ifuse
@@ -64,13 +62,11 @@ ruby-mime-types-1.19
 ruby-netrc
 ruby-rest-client
 ruby-smart_colored
-shell-color-scripts
 slack-desktop
 slack-term
 snapd
 stack-static
 tastyworks
-teamviewer
 titlecase
 todoist-electron
 transset-df
