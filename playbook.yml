@@ -4,6 +4,7 @@
 
   tasks:
     - name: Run the equivalent of pacman -Syu
+      become: yes
       community.general.pacman:
         update_cache: yes
         upgrade: yes
@@ -16,6 +17,7 @@
         src: "{{ item }}"
         dest: "/etc/{{ item | basename }}"
         state: hard
+        force: yes
       loop: "{{lookup('fileglob', 'ref/*.txt', wantlist=True)}}"
 
 
@@ -23,15 +25,20 @@
       community.general.pacman:
         name: "{{ item }}"
         state: present
-        loop: "{{ lookup('file', 'ref/pkglist.txt').splitlines()}}"
+      loop: "{{ lookup('file', 'ref/pkglist.txt').splitlines()}}"
 
 
     - name: Install yay and AUR packages.
       block:
-      - name: Clone yay source repo
+      - name: Clone yay source repo.
         git:
           repo: https://aur.archlinux.org/yay-git.git
           dest: /tmp/yay-build
+
+      - name: Add permissions.
+        file:
+          path: /tmp/yay-build
+          owner: "{{ lookup('env', 'USER') }}"
 
       - name: Make and install yay
         shell: makepkg -si

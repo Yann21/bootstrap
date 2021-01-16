@@ -9,7 +9,7 @@ fi
 ansible-galaxy collection install community.general
 
 # Run playbook
-ansible-playbook -i playbook.yml --ask-become-pass
+ansible-playbook playbook.yml -i hosts --ask-become-pass
 
 if command -v terminal-notifier 1> /dev/null 2>&1; then
     terminal-notifier -title "dotfiles: Bootstrap complete" -message "Successfully set up dev environment."

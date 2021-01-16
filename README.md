@@ -1,7 +1,7 @@
 # Boostrap environment
 
-## Run me
+## Start
 ```
-git clone ..
-/bin/boostrap.sh
+git clone https://github.com/Yann21/boostrap.git
+./bootstrap.sh
 ```
