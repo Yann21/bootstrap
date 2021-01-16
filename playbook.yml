@@ -1,0 +1,75 @@
+---
+- name: Provision production machine
+  hosts: localhost
+
+  tasks:
+    - name: Run the equivalent of pacman -Syu
+      community.general.pacman:
+        update_cache: yes
+        upgrade: yes
+    
+
+    - name: Install / synchronize reference files.
+      tags: ho
+      become: yes
+      file:
+        src: "{{ item }}"
+        dest: "/etc/{{ item | basename }}"
+        state: hard
+      loop: "{{lookup('fileglob', 'ref/*.txt', wantlist=True)}}"
+
+
+    - name: Install packages with pacman.
+      community.general.pacman:
+        name: "{{ item }}"
+        state: present
+        loop: "{{ lookup('file', 'ref/pkglist.txt').splitlines()}}"
+
+
+    - name: Install yay and AUR packages.
+      block:
+      - name: Clone yay source repo
+        git:
+          repo: https://aur.archlinux.org/yay-git.git
+          dest: /tmp/yay-build
+
+      - name: Make and install yay
+        shell: makepkg -si
+        args:
+          chdir: /tmp/yay-build
+
+      - name: Remove build directory
+        file:
+          path: /tmp/yay-build
+          state: absent
+
+      - name: Install packages
+        shell: yay -S --noconfirm --needed {{ item }}
+        loop: "{{ lookup('file', 'ref/pkglistaur.txt').splitlines()}}"
+
+
+    - name: Turn on systemd services.
+      systemd:
+        state: started
+        name: "{{ item }}"
+      loop: "{{ lookup('file', 'ref/systemdlist.txt').splitlines()}}"
+
+
+
+    #- name: Set up remote server
+      #tags: debug
+      #block:
+        #- name: Clone dotfiles repository
+          #git:
+            #repo: https://github.com/Yann21/dotfiles.git
+            #dest: ~/dotfiles_test
+
+        #- name: Install dotfiles to user directory
+          #shell: rcup -v
+
+        #- name: TODO - Install vim plugins
+
+    #- name: Fresh install
+      #tags: debug
+      #block:
+        #- name: Install XMonad, XMobar
