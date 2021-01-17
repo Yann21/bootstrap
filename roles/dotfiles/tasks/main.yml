@@ -1,0 +1,18 @@
+---
+- name: Set up remote server
+  tags: debug
+  block:
+    - name: Clone dotfiles repository
+      git:
+        repo: https://github.com/Yann21/dotfiles.git
+        dest: ~/dotfiles_test
+
+    - name: Install dotfiles to user directory
+      shell: rcup -v
+
+    - name: TODO - Install vim plugins
+
+- name: Fresh install
+  tags: debug
+  block:
+    - name: Install XMonad, XMobar
