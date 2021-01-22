@@ -3,3 +3,6 @@ localhost
 
 [local:vars]
 ansible_connection=local
+
+[rapi]
+pi@192.168.178.34

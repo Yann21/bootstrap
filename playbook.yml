@@ -1,11 +1,34 @@
 ---
-- name: Provision production machine.
-  hosts: localhost
-  roles:
-  - kewlfft.aur
+#- name: Provision production machine.
+  #hosts: localhost
+  #roles:
+  #- kewlfft.aur
 
+  #tasks:
+    #- include_role:
+        #name: dotfiles
+    #- include_role:
+        #name: install
+
+- hosts: all
+  vars_prompt:
+    - name: "githubuser"
+      prompt: "Enter your github username"
+      private: no
+
+    - name: "githubpassword"
+      prompt: "Enter your github password"
+      private: yes
+
+  roles:
+    - dotfiles
+
+
+- name: Provision remote server
+  hosts: rapi
+  environment:
+    PATH: $PATH:$HOME/.local/bin
+  
   tasks:
     - include_role:
         name: dotfiles
-        #- include_role:
-        #name: install
