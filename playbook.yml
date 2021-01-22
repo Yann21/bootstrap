@@ -5,7 +5,7 @@
   - kewlfft.aur
 
   tasks:
-  - include_role:
-      name: dotfiles
-  - include_role:
-      name: install
+    - include_role:
+        name: dotfiles
+        #- include_role:
+        #name: install

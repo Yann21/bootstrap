@@ -1,18 +1,77 @@
 ---
 - name: Set up remote server
-  tags: debug
   block:
+    - name: Install RCM locally
+      shell: bash roles/dotfiles/install_rcm.sh
+
     - name: Clone dotfiles repository
       git:
         repo: https://github.com/Yann21/dotfiles.git
-        dest: ~/dotfiles_test
+        dest: ~/.dotfiles
 
     - name: Install dotfiles to user directory
-      shell: rcup -v
+      shell: PATH=$PATH:$HOME/.local/bin rcup -v
+      args:
+        chdir: $HOME/.dotfiles
 
-    - name: TODO - Install vim plugins
-
-- name: Fresh install
-  tags: debug
+- name: Install exa locally
   block:
-    - name: Install XMonad, XMobar
+  - name: Download, extract, and install
+    unarchive:
+      remote_src: yes
+      src: https://github.com/ogham/exa/releases/download/v0.9.0/exa-linux-x86_64-0.9.0.zip
+      dest: $HOME/.local/bin
+
+  - name: Rename binary
+    shell: mv $HOME/.local/bin/exa-linux-x86_64 $HOME/.local/bin/exa
+
+- name: Install neofetch locally
+  block:
+    - name: Download and extract folder
+      unarchive:
+        remote_src: yes
+        src: https://github.com/dylanaraps/neofetch/archive/7.1.0.tar.gz
+        dest: /tmp
+
+    - name: Make install
+      make:
+        chdir: /tmp/neofetch-7.1.0
+        target: install
+        params:
+          PREFIX: $HOME/.local
+
+
+
+- name: VIM
+  block:
+    - name: Create directory structure
+      file:
+        path: "$HOME/.vim/{{ item }}"
+        state: directory
+      with_items: ["backup", "autoload"]
+
+    - name: Install Vim-Plug - autoload
+      get_url:
+        url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+        dest: ~/.vim/autoload/plug.vim
+        force: yes
+
+    - name: Run PlugInstall - plugged
+      shell: vim -E +"source ~/.vim/vimrc" +"PlugInstall" +qa
+      ignore_errors: yes
+
+    - name: Run PluginInstall - bundle
+      shell: vim -E +"source ~/.vim/vimrc" +"PluginInstall" +qa
+      ignore_errors: yes
+
+      # Requires cmake
+    - name: Compile YouCompleteMe
+      shell: ./install.py --all
+      args:
+        chdir: $HOME/.vim/bundle/YouCompleteMe
+
+
+        #- name: Fresh install
+        #tags: debug
+        #block:
+        #- name: Install XMonad, XMobar
