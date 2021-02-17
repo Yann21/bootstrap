@@ -1,0 +1,14 @@
+# Pacman official package update
+0 */5 * * * pacman -Syu --noconfirm
+
+# AUR package update
+0 */5 * * * paru -Syua --noconfirm
+
+# Refresh database cache
+0 * * * * updatedb
+
+# Update conda Python packages
+0 */5 * * * yes | conda update --all
+
+# pip upgrade all
+0 */5 * * * pip install $(pip list --outdated --format=freeze | sed "s/.*//")

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if ! pgrep -x cmus ; then
+  xterm -name cmus cmus
+else
+  cmus-remote -u
+fi

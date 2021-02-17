@@ -76,6 +76,7 @@
       shell: vim -E +"source ~/.vim/vimrc" +"PlugInstall" +qa
       ignore_errors: yes
 
+      # TODO: Fix wakatime API key prompt clogging ansible
     - name: Run PluginInstall - bundle
       shell: vim -E +"source ~/.vim/vimrc" +"PluginInstall" +qa
       ignore_errors: yes

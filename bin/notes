@@ -1,0 +1,79 @@
+#!/usr/bin/bash
+
+if [ -z "$1" ]; then
+    echo "Type notes -h"
+    exit 2
+fi
+
+
+DIR="/home/yann/Documents/Notepad/"
+
+while test $# -gt 0; do
+    case "$1" in
+        -h|--help|help)
+            echo "Usage: notes <name>"
+            echo " "
+            echo "Options:"
+            echo " "
+            echo "cd: cd into directory"
+            echo "help: print this help"
+            echo "edit: change the bash script"
+            echo "ls: lists available notes"
+            echo "rm: delete note"
+            echo "notes <name>: edit or create new note"
+            exit 0
+            ;;
+
+        --cd|cd)
+            cd $DIR
+            exec bash
+            exit 0
+            ;;
+
+        -l|--list|list|ls)
+            ls -1 $DIR
+            exit 0
+            ;;
+
+        edit)
+            if test $# != 1; then
+                echo "Wrong usage."
+            else
+                vim ~/.local/bin/notes
+            fi
+            exit 0
+            ;;
+
+        rm)
+            if test $# != 2; then
+                echo "Wrong usage."
+            fi
+
+            if test -f "${DIR}$2"; then
+                rm ${DIR}$2
+                echo $2 deleted
+            else
+                echo File doesn\'t exist my friend.
+            fi
+            exit 0
+            ;;
+
+
+
+        *)
+            if test $# != 1; then
+                echo "Wrong usage"
+            fi
+
+            if test -f "${DIR}$1"; then
+                vim ${DIR}$1
+            else
+                echo Creating new file $1.
+                vim ${DIR}$1
+            fi
+            exit 0
+            ;;
+    esac
+done
+
+
