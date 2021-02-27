@@ -24,3 +24,8 @@ Shell / PAM utility
 Display gpu information for xmobar
 * io.xmob
 Display io information for xmobar
+
+## Installation
+* enlightened.py
+`make yeelight`
+installs the systemd file

@@ -1,0 +1,8 @@
+[Unit]
+Description=Yeelight daemon
+
+[Service]
+ExecStart=${pwd}/bin/enlightened.py
+
+[Install]
+WantedBy=multi-user.target
