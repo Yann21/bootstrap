@@ -1,4 +1,8 @@
 ---
+# Copy ssh keys to server
+#  Configure shell:
+#  1. install zsh / ohmyzsh / powerlevel10k
+#  2. change shell chsh -s ~/.local/bin/zsh
 - name: Set up remote server
   block:
     - name: Clone dotfiles repository
@@ -12,13 +16,6 @@
       copy:
         dest: /etc/profile.d/custom-path.sh
         content: "PATH=$PATH:$HOME/.local/bin"
-
-    #- name: export
-      #shell: "source /etc/profile.d/custom-path.sh; export"
-
-    #- name: export2
-      #shell: export PATH=$PATH:$HOME/.local/bin
-
 
     - name: Install RCM locally
       script: roles/dotfiles/install_rcm.sh
