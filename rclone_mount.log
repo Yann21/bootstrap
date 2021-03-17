@@ -1,2 +1,3 @@
 Fatal error: Can not open: /mnt/Drive/: open /mnt/Drive/: no such file or directory
 y
+ps://www.googleapis.com/drive/v3/files/root?alt=json&fields=id&prettyPrint=false&supportsAllDrives=true": couldn't fetch token - maybe it has expired? - refresh with "rclone config reconnect gdrive2:": Post "https://oauth2.googleapis.com/token": dial tcp: lookup oauth2.googleapis.com: Temporary failure in name resolution

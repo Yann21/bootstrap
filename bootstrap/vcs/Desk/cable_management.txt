@@ -1,0 +1,26 @@
+Computer:
+    USB mini -> Phone / Kindle
+    USB      -> Keyboard
+    HDMI     -> Monitor #1
+    DVI-I    -> Monitor #2
+    AC       -> Outlet
+    Jack     -> Speakers
+
+Speakers:
+    Jack    -> Computer
+    Inter   -> Speaker
+    AC      -> Outlet
+
+Monitor #1:
+    HDMI    -> Computer
+    AC      -> Outlet
+
+Monitor #2:
+    HDMI    -> Computer
+    AC      -> Outlet
+
+Keyboard:
+    USB     -> Computer
+
+Mouse:
+    X
