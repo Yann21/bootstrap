@@ -6,7 +6,7 @@ if [ -z "$1" ]; then
 fi
 
 
-DIR="/home/yann/.notes"
+DIR="/home/yann/.notes/"
 
 while test $# -gt 0; do
     case "$1" in
