@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Version=0.0
+Name=PlantUML
+Comment=No comment
+Exec=/usr/bin/plantuml
+Categories=Development;IDE;
