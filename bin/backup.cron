@@ -1,7 +1,0 @@
-#!/bin/bash
-
-sudo rsync -avp \
-    --delete \
-    --exclude={Code,.cache,.conda} \
-    --modify-window=1 \
-    ~/ /mnt/External/Backup

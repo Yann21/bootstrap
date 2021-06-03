@@ -48,9 +48,12 @@ def copy_screenshot_here(name):
 
 
 @click.command()
-@click.argument("filename")
-def main(filename):
-    copy_screenshot_here(filename)
+@click.option("-m", "--mute", is_flag=True, help="Display the latest screenshot without copying it.")
+@click.argument("filename", required=False)
+
+def main(filename, mute):
+    if not mute:
+        copy_screenshot_here(filename)
     os.system(f"pqiv {latest_screenshot()}")
 
 if __name__ == "__main__":
